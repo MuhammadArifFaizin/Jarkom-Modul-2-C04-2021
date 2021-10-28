@@ -48,3 +48,14 @@ Oleh karena itu, masing-masing network configuration dari setiap node adalah seb
 
 ## No 1
 Karena semua node terhubung pada router Foosha, diminta agar seluruh node dapat mengakses internet.
+1. Lakukan `iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.16.0.0/16` untuk penyambungan ke internet
+2. Untuk pengecekan, lakukan `ping google.com` pada router foosha
+![image](https://user-images.githubusercontent.com/63279983/139287232-0ac972b2-171a-44e3-8d56-18b00f8cf0e4.png)
+
+3. Untuk pengeccekan apakah klien node dapat tersambung internet maka dilakukan pengeditan pada file `/etc/resolv.conf` pada node dan setting :
+![image](https://user-images.githubusercontent.com/63279983/139288629-5b53156a-0a81-448f-b111-f9dd16ce0dd5.png)
+
+4. Lalu, lakukan `ping google.com` pada Loguetown :
+![image](https://user-images.githubusercontent.com/63279983/139288569-06c0fa53-797d-42b2-aa8f-29bfe07ff867.png)
+
+## No 2
