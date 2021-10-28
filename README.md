@@ -48,6 +48,7 @@ Oleh karena itu, masing-masing network configuration dari setiap node adalah seb
 
 ## No 1
 Karena semua node terhubung pada router Foosha, diminta agar seluruh node dapat mengakses internet.
+
 1. Lakukan `iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.16.0.0/16` untuk penyambungan ke internet
 2. Untuk pengecekan, lakukan `ping google.com` pada router foosha
 
@@ -62,3 +63,112 @@ Karena semua node terhubung pada router Foosha, diminta agar seluruh node dapat 
 ![image](https://user-images.githubusercontent.com/63279983/139288569-06c0fa53-797d-42b2-aa8f-29bfe07ff867.png)
 
 ## No 2
+Membuat website utama dengan mengakses `franky.c04.com` dengan alias `www.franky.c04.com` pada folder kaizoku
+
+1. Lakukan `apt-get install bind9` pada Enieslobby
+2. Buat folder di dalam folder bind dengan `mkdir /etc/bind/kaizoku`
+3. Buat zone untuk domain `franky.c04.com` pada file `/etc/bind/named.conf.local`
+```
+zone "franky.c04.com" {
+        type master;
+        notify yes;
+        also-notify { 10.16.2.3; };
+        allow-transfer { 10.16.2.3; };
+        file "/etc/bind/kaizoku/franky.c04.com";
+};
+```
+
+4. Setelah itu `nano /etc/bind/kaizoku/franky.c04.com` untuk melakukan konfigurasi pada domain yang telah dibuat sebagai berikut :
+```
+@       IN      SOA     franky.c04.com. root.franky.c04.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      franky.c04.com.
+@       IN      A       10.16.2.2
+www     IN      CNAME   franky.c04.com.
+```
+
+5. Lakukan `service bind9 restart` dan konfigurasi selesai
+6. Untuk pengecekan, lakukan `ping franky.c04.com` dan `ping www.franky.c04.com`
+
+![img2](img/2.3.png)
+
+7. Jika tidak ada response dari domain maka lakukan konfigurasi nameserver pada `/etc/resolv.conf` dan tambahkan `nameserver 10.16.2.2` yang mengarah ke ip EniesLobby
+
+## No. 3
+Membuat subdomain `super.franky.c04.com` dengan alias `www.super.franky.c04.com` mengarah ke Skypie
+
+1. Lakukan penambahan di `/etc/bind/kaizoku/franky.c04.com` pada EniesLobby sebagai berikut :
+```
+$TTL    604800
+@       IN      SOA     franky.c04.com. root.franky.c04.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      franky.c04.com.
+@       IN      A       10.16.2.2
+www     IN      CNAME   franky.c04.com.
+super   IN      A       10.16.2.4       ; IP Skypie
+www.super       IN      CNAME   super
+ns1     IN      A       10.16.2.3       ; IP Water7
+mecha   IN      NS      ns1
+```
+
+2. Lakukan `service bind9 restart`
+3. Cek subdomain dengan melakukan `ping super.franky.c04.com` dan `ping 'www.super.franky.c04.com` pada node klien :
+
+![img3](img/3.2.png)
+
+## No. 4
+Buat reverse domain untuk domain utama
+
+1. Buat zone baru di `/etc/bind/named.conf.local` pada EniesLobby :
+```
+zone "2.16.10.in-addr.arpa" {
+    type master;
+    file "/etc/bind/kaizoku/2.16.10.in-addr.arpa";
+};
+```
+
+2. Buat file baru dan konfigurasi dengan `nano /etc/bind/kaizoku/2.16.10.in-addr.arpa` :
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     2.16.10.in-addr.arpa. root.2.16.10.in-addr.arpa. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+2.16.10.in-addr.arpa.   IN      NS      franky.c04.com.
+2       IN      PTR     franky.c04.com.
+```
+
+3. Untuk pengecekan, lakukan `host -t PTR 10.16.2.2` :
+
+![img4](img/4.1.png)
+
+## No 5
+Buat Water7 sebagai DNS Slave
+
+1. Buat zone pada Water7 sebagai DNS slave dari EniesLobby :
+```
+zone "franky.c04.com" {
+        type slave;
+        allow-transfer {10.16.2.2;};
+        masters { 10.16.2.2; };
+        file "/var/lib/bind/franky.c04.com";
+};
+```
+
+2. 
