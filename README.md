@@ -161,7 +161,7 @@ $TTL    604800
 ## No 5
 Buat Water7 sebagai DNS Slave
 
-1. Buat zone pada Water7 sebagai DNS slave dari EniesLobby :
+1. Buat zone di `/etc/bind/named.conf.local` pada Water7 sebagai DNS slave dari EniesLobby :
 ```
 zone "franky.c04.com" {
         type slave;
@@ -171,4 +171,59 @@ zone "franky.c04.com" {
 };
 ```
 
-2. 
+2. Untuk pengecekannya, pertama lakukan `service bind9 start` pada EniesLobby begitu juga dengan Water7. setelah itu lakukan `service bind9 stop` pada EniesLobby untuk simulasi kerusakan DNS, dan lakukan testing `ping franky.c04.com` pada Loguetown :
+
+![img5](img/5.1.png)
+
+## No 6
+Setelah itu terdapat subdomain `mecha.franky.yyy.com` dengan alias `www.mecha.franky.yyy.com` yang didelegasikan dari EniesLobby ke Water7 dengan IP menuju ke Skypie dalam folder sunnygo
+
+1. Tambahkan beberapa konfigurasi di `/etc/bind/kaizoku/franky.c04.com` pada EniesLobby yang mengarah ke IP Water7 :
+```
+ns1     IN      A       10.16.2.3       ; IP Water7
+mecha   IN      NS      ns1
+```
+
+2. Tambah zone di `/etc/bind/named.conf.local` pada Water7 :
+```
+zone "mecha.franky.c04.com" {
+        type master;
+        file "/etc/bind/sunnygo/mecha.franky.c04.com";
+};
+```
+
+3. Buat folder bernama sunnygo pada Water7 dengan `mkdir /etc/bind/sunnygo`
+4. Tambah file baru dan konfigurasi dengan `nano /etc/bind/sunnygo/mecha.franky.c04.com` yang menuju ke IP Skypie:
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     mecha.franky.c04.com. root.mecha.franky.c04.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      mecha.franky.c04.com.
+@       IN      A       10.16.2.4
+www     IN      CNAME   mecha.franky.c04.com.
+```
+
+5. Lakukan restart pada kedua node dan cek menggunakan `ping mecha.franky.c04.com` pada node klien :
+
+![img6](img/6.1.png)
+
+## No 7
+Untuk memperlancar komunikasi Luffy dan rekannya, dibuatkan subdomain melalui Water7 dengan nama `general.mecha.franky.yyy.com` dengan alias `www.general.mecha.franky.yyy.com` yang mengarah ke Skypie
+
+1. Tambahkan konfigurasi pada `/etc/bind/sunnygo/mecha.franky.c04.com` yang mengarah ke Skypie :
+```
+general IN      A       10.16.2.4
+www.general     IN      CNAME   general
+```
+
+2. lakukan `service bind9 restart` pada Water7 dan cek dengan `ping general.mecha.franky.c04.com` pada node klien :
+
+![img7](img/7.1.png)
