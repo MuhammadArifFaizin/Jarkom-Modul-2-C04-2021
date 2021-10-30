@@ -353,4 +353,4 @@ RewriteRule ^(.*)franky(.*)\.(jpg|gif|png)$ http://super.franky.c04.com/public/i
 ```
 
 # Kendala yang dialami 
-Kendala yang dialami selama praktikum ini adalah 
+Kendala yang dialami selama praktikum ini adalah tidak bisa mengerjakan nomor 3 dan nomor 17 masih belum benar
