@@ -53,7 +53,7 @@ $TTL    604800
                          604800 )       ; Negative Cache TTL
 ;
 @       IN      NS      franky.c04.com.
-@       IN      A       10.16.2.2
+@       IN      A       10.16.2.4
 www     IN      CNAME   franky.c04.com.
 super   IN      A       10.16.2.4       ; IP Skypie
 www.super       IN      CNAME   super
