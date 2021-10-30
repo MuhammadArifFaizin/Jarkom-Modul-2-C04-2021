@@ -4,7 +4,6 @@ apt-get install php -y
 apt-get install libapache2-mod-php7.0 -y
 apt-get install wget -y
 apt-get install unzip -y
-apt-get install lynx -y
 
 wget https://github.com/FeinardSlim/Praktikum-Modul-2-Jarkom/archive/refs/heads/main.zip
 unzip /root/main.zip
@@ -94,15 +93,16 @@ echo '
             Options +Indexes
         </Directory>
         ErrorDocument 404 /error/404.html
-
-        <Directory /var/www/super.franky.c04.com>
-            # Options +FollowSymLinks -Multiviews
-            # AllowOverride All
+        
+        Alias "/js" "/var/www/super.franky.c04.com/public/js"
+        
+        <Directory /var/www/super.franky.c04.com/public/*>
+            Options -Indexes
+        </Directory>
+        
+        <Directory /var/www/super.franky.c04.com/public/images>
             Options +Indexes
         </Directory>
-
-        Alias "/js" "/var/www/super.franky.c04.com/public/js"
-
         # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
         # error, crit, alert, emerg.
         # It is also possible to configure the loglevel for particular
