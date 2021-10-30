@@ -232,3 +232,88 @@ www.general     IN      CNAME   general
 2. lakukan `service bind9 restart` pada Water7 dan cek dengan `ping general.mecha.franky.c04.com` pada node klien :
 
 ![img7](img/7.1.png)
+
+## No 8
+## No 9
+## No 10
+## No 11
+## No 12
+## No 13
+## No 14
+Diminta untuk membuat web `www.general.mecha.franky.c04.com` hanya dapat diakses dengan port 15000 dan 15500 saja.
+
+Duplikatkan file `/etc/apache2/sites-available/000-default.conf` dengan nama `/etc/apache2/sites-available/general.mecha.franky.c04.com.conf`.
+
+Kemudian ubah file tersebut dengan mengubah port dari VirtualHost menjadi 15000 dan 15500 atau menjadi `<VirtualHost *:15000 *:15500>`. Selain itu, ubah ServerName, ServerAlias, dan DocumentRoot menjadi `general.mecha.franky.c04.com`, `www.general.mecha.franky.c04.com`, dan `/var/www/general.mecha.franky.c04.com`.
+
+![img 14.1](img/14.1.png)
+
+Lalu, agar port 15000 dan 15500 dapat terdeteksi, maka tambahkan baris berikut setelah baris `Listen 80`
+```bash
+Listen 15000
+Listen 15500
+```
+![img 14.2](img/14.2.png)
+
+Setelah itu, isi folder `/var/www/general.mecha.franky.c04.com` dengan isi dari folder `general.mecha.franky.c04.com` yang telah di download.
+
+Kemudian jalankan command `a2ensite general.mecha.frankyc04.com`, dan restart apache dengan menjalankan command `service apache2 restart`.
+## No 15
+Diminta untuk membuat autentikasi untuk web `general.mecha.franky.c04.com` dengan username luffy dan password onepiece dan file di `/var/www/general.mecha.franky.c04.com`. 
+
+Jalankan command `htpasswd -c /etc/apache2/.htpasswd luffy` untuk mengautentikasi ke dalam file dengan username `luffy`, kemudian akan ada perintah untuk memasukkan password, isikan dengan `onepiece` serta konfirmasinya.
+![img 15.1](img/15.1.png)
+
+Setelah itu, edit file `etc/apache2/sites-available/general.mecha.franky.c04.com.conf` dan tambahkan baris berikut : 
+```bash
+    <Directory /var/www/general.mecha.franky.c04.com>
+        Options +FollowSymLinks -Multiviews
+        AllowOverride All
+    </Directory>
+```
+
+Lalu ubah file `/var/www/general.mecha.franky.c04.com/.htaccess` dan tambahkan : 
+```bash
+    AuthType Basic
+    AuthName "Restricted Content"
+    AuthUserFile /etc/apache2/.htpasswd
+    Require valid-user
+```
+![img 15.2](img/15.2.png)
+## No 16
+Diminta untuk mengalihkan setiap kali mengakses IP EniesLobby akan dialihkan secara otomatis ke `www.franky.c04.com`
+
+Untuk itu, edit file `/var/www/html/.htaccess` dan tambahkan : 
+```bash
+RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTP_HOST} ^10\.16\.2\.4$
+RewriteRule ^(.*)$ http://www.franky.c04.com [L,R=301]
+```
+
+Lalu terakhir, edit file `/etc/apache2/sites-available/000-default.conf` dan tambahkan beberapa baris berikut : 
+```bash 
+    <Directory /var/www/html>
+        Options +FollowSymLinks -Multiviews
+        AllowOverride All
+    </Directory>
+```
+## No 17
+Diminta untuk mengalihkan setiap kali request yang akan mengakses gambar yang memiliki substring `franky` ke gambar `franky.png`
+
+Untuk itu, edit file `/etc/apache2/sites-available/super.franky.c04.com.conf` dan tambahkan beberapa baris berikut : 
+```bash
+    <Directory /var/www/super.franky.c04.com>
+        Options +FollowSymLinks -Multiviews
+        AllowOverride All
+    </Directory>
+```
+
+Sehingga, untuk mengarahkannya tambahkan rule berikut ke file `/var/www/super.franky.c04.com/.htaccess` dan tambahkan kode berikut : 
+```bash
+RewriteEngine On
+RewriteRule ^(.*)franky(.*)\.(jpg|gif|png)$ http://super.franky.c04.com/public/images/franky.png [L,R]
+```
+
+# Kendala yang dialami 
+Kendala yang dialami selama praktikum ini adalah 

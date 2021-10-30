@@ -1,6 +1,15 @@
 apt-get update
 apt-get install bind9 -y
 
+# Setting Nameserver ke EniesLobby
+echo '
+# nameserver 192.168.122.1
+nameserver 10.16.2.2
+# nameserver 10.16.2.3
+' > etc/resolv.conf
+
+# Setting Domain ke franky.c04.com
+# Setting Reverse DNS untuk franky.c04.com
 echo '
 zone "franky.c04.com" {
         type master;
@@ -29,6 +38,8 @@ options {
 
 mkdir /etc/bind/kaizoku
 
+# Pembuatan Domain ke franky.c04.com
+# diarahkan juga ke IP Skypie dan Water7
 echo '
 ;
 ; BIND data file for local loopback interface
@@ -50,6 +61,7 @@ ns1     IN      A       10.16.2.3       ; IP Water7
 mecha   IN      NS      ns1
 ' > /etc/bind/kaizoku/franky.c04.com
 
+# pembuatan domain untuk Reverse DNS
 echo '
 ;
 ; BIND data file for local loopback interface
