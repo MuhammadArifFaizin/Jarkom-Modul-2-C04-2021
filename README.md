@@ -234,11 +234,48 @@ www.general     IN      CNAME   general
 ![img7](img/7.1.png)
 
 ## No 8
+Pada nomer ini diminta untuk membuat webserver dengan domain www.franky.c04.com maka pertama duplikatkan file `/etc/apache2/sites-available/000-default.conf` dengan nama `/etc/apache2/sites-available/franky.c04.com.conf`. Kemudian ubah ServerName, Server Alias, dan DocumentRoot menjadi sebagai berikut
+
+![img8](img/8.1.png)
+
+Kemudian download file dari link github yang disediakan, unzip isinya. Kemudian buatlah direktori baru pada `/var/www/` dengan nama `franky.c04.com` dan salin isi dari hasil unzip franky.zip ke dalam folder yang baru dibuat tersebut. Kemudian ketikan `a2esnite franky.c04.com` untuk mengaktifkan website dan restart apache dengan command `service apache2 restart` dan apabila di buka pada Loguetown dengan `lynx franky.c04.com` akan terbuka seperti berikut.
+
+![imgfranky](img/franky.png)
+
 ## No 9
+Pada nomer ini diminta untuk mengubah url franky.c04.com/index.php/home menjadi franky.c04.com/home . Maka editlah `/etc/apache2/sites-available/franky.c04.com.conf` menjadi sebagai berikut 
+
+![img9.1](img/9.2.png)
+
+Kemudian buatlah file `.htaccess` pada folder `/var/www/franky.c04.com` dan isi sebagai berikut
+
+![img9.2](img/9.1.png)
+
+Kemudian apabila dicoba pada Loguetown `lynx franky.c04.com/home` maka akan terbuka seperti berikut
+
+![imgwebfranky](img/franky.png)
+
 ## No 10
+Pada nomer ini diminta untuk membuat webserver dengan domain www.super.franky.c04.com maka pertama duplikatkan file `/etc/apache2/sites-available/000-default.conf` dengan nama `/etc/apache2/sites-available/super.franky.c04.com.conf`. Kemudian ubah ServerName, Server Alias, dan DocumentRoot menjadi sebagai berikut
+
+![img10](img/10.1.png)
+
+Kemudian download file dari link github yang disediakan, unzip isinya. Kemudian buatlah direktori baru pada `/var/www/` dengan nama `super.franky.c04.com` dan salin isi dari hasil unzip superfranky.zip ke dalam folder yang baru dibuat tersebut. Kemudian ketikan `a2esnite super.franky.c04.com` untuk mengaktifkan website dan restart apache dengan command `service apache2 restart` dan apabila di buka pada Loguetown dengan `lynx super.franky.c04.com` akan terbuka seperti berikut.
+
+![imgsuper](img/superfranky.png)
+
 ## No 11
+Pada nomer ini diminta agar folder public menjadi directori listing saja dan tidak bisa membuka folder-folder didalamnya, edit `super.franky.c04.com.conf` menjadi sebagai berikut
+
+![img11](img/11.1.png)
+
 ## No 12
+Untuk nomer 12 diminta untuk edit halaman error 404 menjadi halaman dari folder `error`, untuk itu cukup menambahkan line berikut pada file `super.franky.c04.com.conf`
+
+![img12](img/12.1.png)
+
 ## No 13
+Belum bisa :(
 ## No 14
 Diminta untuk membuat web `www.general.mecha.franky.c04.com` hanya dapat diakses dengan port 15000 dan 15500 saja.
 
