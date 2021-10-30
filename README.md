@@ -29,6 +29,7 @@ File Requirement Github
 
 ## Persiapan
 Diminta untuk membuat topology tersebut, beserta konfigurasinya sesuai dengan role masing-masing. Diminta untuk mengubah EniesLobby menjadi DNS Master, Water7 menjadi DNS Slave, dan Skypie menjadi Web Server. Terdapat 2 Client yaitu Loguetown, dan Alabasta.
+
 ![Persiapan 1](img/Persiapan-1.png)
 
 Oleh karena itu, masing-masing network configuration dari setiap node adalah sebagai berikut
